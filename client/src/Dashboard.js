@@ -57,6 +57,7 @@ export default function Dashboard({ code }) {
         className='d-flex flex-column py-2'
         style={{ height: '100vh' }}>
         <Form.Control
+          className="input"
           type="search"
           size="lg"
           placeholder="lose yourself in the rhythm of..."
