@@ -21,12 +21,12 @@ export default function Player({ accessToken, trackUri }) {
     autopPlay={true}
     uris={ trackUri ? [trackUri] : []}
     styles={{
-      bgColor: '#111111',
+      bgColor: '#222222',
       activeColor: '#B73239',
       color: '#666666',
       trackNameColor: '#666666',
       trackArtistColor: '#666666',
-      sliderTrackColor: '#111111',
+      sliderTrackColor: '#222222',
       sliderColor: '#666666',
       sliderHeight: '10px',
       altColor: '#666666'

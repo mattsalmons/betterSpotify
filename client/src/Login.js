@@ -12,7 +12,7 @@ export default function Login() {
       <a
         className="btn btn-success btn-lg"
         style={{
-          backgroundColor: '#111111',
+          backgroundColor: '#222222',
           color: '#666666',
           border: 'solid thin',
           borderColor: '#1DB954',

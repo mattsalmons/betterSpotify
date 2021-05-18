@@ -5,6 +5,8 @@ import SpotifyWebApi from 'spotify-web-api-node';
 import TrackSearchResult from './TrackSearchResult';
 import Player from './Player';
 
+import axios from 'axios';
+
 const spotifyApi = new SpotifyWebApi({
   clientId: 'ad631922d2b44460a0572ea8326d9e7a'
 })
@@ -14,15 +16,29 @@ export default function Dashboard({ code }) {
   const [search, setSearch] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [playingTrack, setPlayingTrack] = useState();
+  const [lyrics, setLyrics] = useState('');
 
   const chooseTrack = (track) => {
     setPlayingTrack(track, true);
     setSearch('');
+    setLyrics('');
   }
 
   const onChange = (e) => {
     setSearch(e.target.value);
   }
+
+  useEffect(() => {
+    if (!playingTrack) return;
+    axios.get('http://localhost:3001/lyrics', {
+      params: {
+        track: playingTrack.title,
+        artist: playingTrack.artist
+      }
+    }).then(res => {
+      setLyrics(res.data.lyrics);
+    })
+  })
 
   useEffect(() => {
     if (!accessToken) return;
@@ -70,7 +86,7 @@ export default function Dashboard({ code }) {
           placeholder="lose yourself in the rhythm of..."
           value={search}
           style={{
-            backgroundColor: '#111111',
+            backgroundColor: '#222222',
             borderTop: 'none',
             borderLeft: 'none',
             borderRight: 'none',
@@ -91,6 +107,14 @@ export default function Dashboard({ code }) {
               chooseTrack={chooseTrack}
             />
           ))}
+          {!searchResults.length && (
+            <div
+              className="text-center"
+              style={{ whiteSpace: 'pre' }}
+            >
+              {lyrics}
+            </div>
+          )}
         </div>
         <div><Player
           accessToken={accessToken}
