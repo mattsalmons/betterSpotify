@@ -9,8 +9,19 @@ export default function Login() {
     <Container
       className="d-flex justify-content-center align-items-center"
       style={{ minHeight: "100vh" }}>
-      <a className="btn btn-success btn-lg" href={AUTH_URL}>
-        Login With Spotify
+      <a
+        className="btn btn-success btn-lg"
+        style={{
+          backgroundColor: '#111111',
+          color: '#666666',
+          border: 'solid thin',
+          borderColor: '#1DB954',
+          borderTop: 'none',
+          borderBottom: 'none',
+          fontFamily: 'Montserrat'
+        }}
+        href={AUTH_URL}>
+        login with spotify...
       </a>
     </Container>
   )

@@ -58,8 +58,19 @@ export default function Dashboard({ code }) {
         style={{ height: '100vh' }}>
         <Form.Control
           type="search"
+          size="lg"
           placeholder="lose yourself in the rhythm of..."
           value={search}
+          style={{
+            backgroundColor: '#111111',
+            borderTop: 'none',
+            borderLeft: 'none',
+            borderRight: 'none',
+            borderBottom: 'solid thin',
+            borderColor: '#666666',
+            color: '#666666',
+            fontFamily: 'Montserrat'
+          }}
           onChange={onChange}
         />
         <div
