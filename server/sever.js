@@ -4,7 +4,7 @@ const SpotifyWebApi = require('spotify-web-api-node');
 const app = express();
 
 app.post('/login', (req, res) => {
-  const code = req.body.code:
+  const code = req.body.code;
   const spotifyApi = new SpotifyWebApi({
     redirectUri: 'http://localhost:3000',
     clientId: 'ad631922d2b44460a0572ea8326d9e7a',
@@ -23,3 +23,5 @@ app.post('/login', (req, res) => {
       res.sendStatus(400);
     })
 })
+
+app.listen(3001);
