@@ -16,12 +16,22 @@ export default function Dashboard({ code }) {
   const [search, setSearch] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [playingTrack, setPlayingTrack] = useState();
-  const [lyrics, setLyrics] = useState('');
+  const [lyrics, setLyrics] = useState(`
+  music has the power to move mountains and change lives.
+        a listener can get lost in one line,
+                            yet find themself in another.
+
+  search above for the right song at the right time...
+                                                                        but choose wisely.
+
+  with great power comes great resposibility.`);
+  const [placeholderText, setPlaceholderText] = useState('search here...');
 
   const chooseTrack = (track) => {
     setPlayingTrack(track, true);
     setSearch('');
     setLyrics('');
+    setPlaceholderText(`${track.artist}: ${track.title}`)
   }
 
   const onChange = (e) => {
@@ -83,7 +93,7 @@ export default function Dashboard({ code }) {
           className="input"
           type="search"
           size="lg"
-          placeholder="lose yourself in the rhythm of..."
+          placeholder={placeholderText}
           value={search}
           style={{
             backgroundColor: '#222222',
@@ -110,15 +120,24 @@ export default function Dashboard({ code }) {
           {!searchResults.length && (
             <div
               className="text-center"
-              style={{ whiteSpace: 'pre' }}
+              style={{
+                whiteSpace: 'pre',
+                color: '#666666',
+                fontFamily: 'Montserrat'
+              }}
             >
               {lyrics}
             </div>
           )}
         </div>
-        <div><Player
-          accessToken={accessToken}
-          trackUri={playingTrack?.uri}/></div>
+          {playingTrack ?
+          <div>
+            <Player
+            accessToken={accessToken}
+            trackUri={playingTrack?.uri}/>
+            </div> : null
+           }
+
       </Container>
   )
 }

@@ -14,7 +14,7 @@ export default function Player({ accessToken, trackUri }) {
     showSaveIcon
     callback={state => {
       if (!state.isPlaying) {
-        setPlay(false);
+        setPlay(true);
       }
     }}
     play={play}
@@ -29,7 +29,8 @@ export default function Player({ accessToken, trackUri }) {
       sliderTrackColor: '#222222',
       sliderColor: '#666666',
       sliderHeight: '10px',
-      altColor: '#666666'
+      height: '100px',
+      magnifySliderOnHover: true
     }}
   />
 }

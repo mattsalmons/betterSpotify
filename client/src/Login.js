@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 
 import { Container } from 'react-bootstrap';
 
@@ -10,12 +10,12 @@ export default function Login() {
       className="d-flex justify-content-center align-items-center"
       style={{ minHeight: "100vh" }}>
       <a
-        className="btn btn-success btn-lg"
+        className="btn btn-lg"
         style={{
           backgroundColor: '#222222',
           color: '#666666',
           border: 'solid thin',
-          borderColor: '#1DB954',
+          borderColor: '#666666',
           borderTop: 'none',
           borderBottom: 'none',
           fontFamily: 'Montserrat'

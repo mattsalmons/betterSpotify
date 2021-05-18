@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 
 const SpotifyWebApi = require('spotify-web-api-node');
 const lyricsFinder = require('lyrics-finder');
@@ -7,6 +8,8 @@ const lyricsFinder = require('lyrics-finder');
 const app = express();
 app.use(cors());
 app.use(express.json());
+// parse url params for lyrics
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/refresh', (req, res) => {
   const refreshToken = req.body.refreshToken;
@@ -51,7 +54,22 @@ app.post('/login', (req, res) => {
 })
 
 app.get('/lyrics', async (req, res) => {
-  const lyrics = await lyricsFinder(req.query.artist, req.query.track) || 'No lyrics found.'
+  const lyrics = await lyricsFinder(req.query.artist, req.query.track)
+  || `
+
+
+
+
+
+
+
+
+
+no lyrics found. But let's be real,
+it's probably about want and/or loss...
+
+
+and that's okay.`
   res.json({ lyrics })
 })
 
