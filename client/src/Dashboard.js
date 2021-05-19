@@ -27,7 +27,7 @@ export default function Dashboard({ code }) {
 
   with great power comes great resposibility.
   `);
-  const [placeholderText, setPlaceholderText] = useState('search here...');
+  const [placeholderText, setPlaceholderText] = useState('');
 
   const chooseTrack = (track) => {
     setPlayingTrack(track);
