@@ -49,8 +49,6 @@ export default function Dashboard({ code }) {
     },
 
     lyrics: {
-      // position: 'relative',
-      // backgroundAttachment: 'fixed',
       height: '100vh',
       whiteSpace: 'pre',
       color: '#666666',
@@ -115,7 +113,9 @@ export default function Dashboard({ code }) {
             title: track.name,
             uri: track.uri,
             albumUrl: smallestAlbumImage.url,
-            backgroundImage: largestAlbumImage.url
+            backgroundImage: largestAlbumImage.url,
+            album: track.album.name,
+            albumUri: track.album.albumUri
           }
         })
       )
@@ -148,7 +148,7 @@ export default function Dashboard({ code }) {
         />
         <div
           className='flex-grow-1 my-2'
-          style={{ overflowY: 'hidden', height: '100vh' }}>
+          style={{ overflowY: 'auto', height: '100vh' }}>
           >
           {searchResults.map(track => (
             <TrackSearchResult
