@@ -16,6 +16,9 @@ export default function Dashboard({ code }) {
   const [search, setSearch] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [backgroundImage, setBackgroundImage] = useState('');
+  const [playlists, setPlaylists] = useState([]);
+  const [userData, setUserData] = useState()
+  console.log(userData);
   const [playingTrack, setPlayingTrack] = useState();
   const [lyrics, setLyrics] = useState(`
   music has the power to move mountains and change lives.
@@ -123,6 +126,18 @@ export default function Dashboard({ code }) {
 
     return () => (cancel = true)
   }, [search, accessToken])
+
+  // getUser
+  useEffect(() => {
+    if (!accessToken) return
+    spotifyApi.getMe()
+      .then(res => {
+        setUserData(res.body)
+      }, function(err) {
+        console.log('Something went wrong!', err);
+      });
+  }, [accessToken])
+
 
   return (
       <Container
