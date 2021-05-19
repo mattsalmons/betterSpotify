@@ -39,15 +39,24 @@ export default function Dashboard({ code }) {
 
   const styles = {
     background: {
+      position: 'relative',
+      height: '100vh',
       backgroundImage: `url(${backgroundImage})`,
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed',
       backgroundSize: 'cover',
+      overflowY: 'auto',
     },
 
     lyrics: {
+      // position: 'relative',
+      // backgroundAttachment: 'fixed',
+      height: '100vh',
       whiteSpace: 'pre',
       color: '#666666',
       fontFamily: 'Montserrat',
-      backgroundColor: 'rgba(34, 34, 34, 0.97)'
+      backgroundColor: 'rgba(34, 34, 34, 0.97)',
+      overflowY: 'auto'
     }
   }
 
@@ -139,7 +148,8 @@ export default function Dashboard({ code }) {
         />
         <div
           className='flex-grow-1 my-2'
-          style={{ overflowY: 'auto' }}>
+          style={{ overflowY: 'hidden', height: '100vh' }}>
+          >
           {searchResults.map(track => (
             <TrackSearchResult
               key={track.uri}
@@ -153,7 +163,6 @@ export default function Dashboard({ code }) {
               {lyrics}
               </div>
             </div>
-
           )}
         </div>
           {playingTrack ?
