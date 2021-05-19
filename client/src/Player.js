@@ -29,8 +29,7 @@ export default function Player({ accessToken, trackUri }) {
       sliderTrackColor: '#222222',
       sliderColor: '#666666',
       sliderHeight: '10px',
-      height: '100px',
-      magnifySliderOnHover: true
+      height: '75px',
     }}
   />
 }
