@@ -47,7 +47,7 @@ export default function Dashboard({ code }) {
       whiteSpace: 'pre',
       color: '#666666',
       fontFamily: 'Montserrat',
-      backgroundColor: 'rgba(34, 34, 34, 0.95)'
+      backgroundColor: 'rgba(34, 34, 34, 0.97)'
     }
   }
 
