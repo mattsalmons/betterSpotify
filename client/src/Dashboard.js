@@ -25,7 +25,8 @@ export default function Dashboard({ code }) {
   search above for the right song at the right time...
                                                                         but choose wisely.
 
-  with great power comes great resposibility.`);
+  with great power comes great resposibility.
+  `);
   const [placeholderText, setPlaceholderText] = useState('search here...');
 
   const chooseTrack = (track) => {
