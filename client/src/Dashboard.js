@@ -15,6 +15,7 @@ export default function Dashboard({ code }) {
   const accessToken = useAuth(code);
   const [search, setSearch] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [backgroundImage, setBackgroundImage] = useState('');
   const [playingTrack, setPlayingTrack] = useState();
   const [lyrics, setLyrics] = useState(`
   music has the power to move mountains and change lives.
@@ -28,16 +29,32 @@ export default function Dashboard({ code }) {
   const [placeholderText, setPlaceholderText] = useState('search here...');
 
   const chooseTrack = (track) => {
-    setPlayingTrack(track, true);
+    setPlayingTrack(track);
     setSearch('');
     setLyrics('');
     setPlaceholderText(`${track.artist}: ${track.title}`)
+    setBackgroundImage(track.backgroundImage)
+  }
+
+  const styles = {
+    background: {
+      backgroundImage: `url(${backgroundImage})`,
+      backgroundSize: 'cover',
+    },
+
+    lyrics: {
+      whiteSpace: 'pre',
+      color: '#666666',
+      fontFamily: 'Montserrat',
+      backgroundColor: 'rgba(34, 34, 34, 0.95)'
+    }
   }
 
   const onChange = (e) => {
     setSearch(e.target.value);
   }
 
+  // get lyrics
   useEffect(() => {
     if (!playingTrack) return;
     axios.get('http://localhost:3001/lyrics', {
@@ -50,11 +67,13 @@ export default function Dashboard({ code }) {
     })
   })
 
+  // set accessToken
   useEffect(() => {
     if (!accessToken) return;
     spotifyApi.setAccessToken(accessToken)
   }, [accessToken])
 
+  // setSearchResults
   useEffect(() => {
     if (!search) return setSearchResults([])
     if (!accessToken) return
@@ -64,10 +83,19 @@ export default function Dashboard({ code }) {
       if (cancel) return
       setSearchResults(
         res.body.tracks.items.map(track => {
+          // get smallest image URL
           const smallestAlbumImage = track.album.images.reduce(
             (smallest, image) => {
               if (image.height < smallest.height) return image
               return smallest
+            },
+            track.album.images[0]
+          )
+          // get largest image URL
+          const largestAlbumImage = track.album.images.reduce(
+            (largest, image) => {
+              if (image.height > largest.height) return image
+              return largest
             },
             track.album.images[0]
           )
@@ -77,6 +105,7 @@ export default function Dashboard({ code }) {
             title: track.name,
             uri: track.uri,
             albumUrl: smallestAlbumImage.url,
+            backgroundImage: largestAlbumImage.url
           }
         })
       )
@@ -118,16 +147,12 @@ export default function Dashboard({ code }) {
             />
           ))}
           {!searchResults.length && (
-            <div
-              className="text-center"
-              style={{
-                whiteSpace: 'pre',
-                color: '#666666',
-                fontFamily: 'Montserrat'
-              }}
-            >
+            <div style={styles.background}>
+               <div className="text-center lyrics" style={styles.lyrics}>
               {lyrics}
+              </div>
             </div>
+
           )}
         </div>
           {playingTrack ?

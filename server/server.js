@@ -65,7 +65,7 @@ app.get('/lyrics', async (req, res) => {
 
 
 
-no lyrics found. But let's be real,
+no lyrics found. but let's be real,
 it's probably about want and/or loss...
 
 
