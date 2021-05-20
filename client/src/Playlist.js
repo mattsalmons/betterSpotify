@@ -1,9 +1,11 @@
 import React from 'react'
 
 export default function Playlist({ playlist, chooseTrack }) {
+
   const handlePlay = () => {
     chooseTrack(playlist);
   }
+
   return (
     <div
       className={"d-flex justify-content-around"}

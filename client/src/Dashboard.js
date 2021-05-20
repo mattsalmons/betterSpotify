@@ -16,10 +16,13 @@ export default function Dashboard({ code }) {
   const accessToken = useAuth(code);
   const [search, setSearch] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  console.log(searchResults)
   const [backgroundImage, setBackgroundImage] = useState('');
   const [playlists, setPlaylists] = useState([]);
+  const [isPlaylist, setIsPlaylist] = useState(false);
   const [userData, setUserData] = useState({})
   const [playingTrack, setPlayingTrack] = useState();
+  const [placeholderText, setPlaceholderText] = useState('');
   const [lyrics, setLyrics] = useState(`
   music has the power to move mountains and change lives.
         a listener can get lost in one line,
@@ -30,14 +33,20 @@ export default function Dashboard({ code }) {
 
   with great power comes great resposibility.
   `);
-  const [placeholderText, setPlaceholderText] = useState('');
 
   const chooseTrack = (track) => {
     setPlayingTrack(track);
     setSearch('');
     setLyrics('');
-    setPlaceholderText(`${track.artist}: ${track.title}`)
-    setBackgroundImage(track.backgroundImage)
+    if (!track.artist) {
+      setPlaceholderText(`Playlist: ${track.name}`)
+      setBackgroundImage(track.images[0].url);
+      setIsPlaylist(true);
+    } else {
+      setPlaceholderText(`${track.artist}: ${track.title}`)
+      setBackgroundImage(track.backgroundImage)
+      setIsPlaylist(false);
+    }
   }
 
   const styles = {
@@ -65,8 +74,27 @@ export default function Dashboard({ code }) {
     setSearch(e.target.value);
   }
 
+  // set setPlaylistTrack
+  // useEffect(() => {
+  //   spotifyApi.getMyCurrentPlayingTrack()
+  //     .then(res => {
+  //       setPlaylistTrack({
+  //         album: res.body.item.album.name,
+  //         albumUrl: res.body.item.album.images[2],
+  //         artist: res.body.item.artists[0].name,
+  //         backgroundImage: res.body.item.album.images[2],
+  //         title: res.body.item.name,
+  //         uri: res.body.item.uri
+  //       })
+  //     })
+  //     .catch(err => {
+  //       console.log('something went wrong: ' + err);
+  //     })
+  // }, [playingTrack])
+
   // get lyrics
   useEffect(() => {
+    if (isPlaylist) return;
     if (!playingTrack) return;
     axios.get('http://localhost:3001/lyrics', {
       params: {
@@ -118,7 +146,6 @@ export default function Dashboard({ code }) {
             albumUrl: smallestAlbumImage.url,
             backgroundImage: largestAlbumImage.url,
             album: track.album.name,
-            albumUri: track.album.albumUri
           }
         })
       )
@@ -199,29 +226,32 @@ export default function Dashboard({ code }) {
           ))}
 
           {/* lyrics */}
-          {!searchResults.length && (
+          {!searchResults.length && !isPlaylist ?
             <div style={styles.background}>
               <div
                 className="text-center lyrics"
                 style={styles.lyrics}>
                 {lyrics}
               </div>
-            </div>
-          )}
+            </div> :
+            <div style={styles.background}>
+
+          </div>
+          }
 
         </div>
         {/* playlists */}
         <div className="d-flex justify-content-around">
           {playlists.length && (
-          playlists.map(playlist => (
-            <Playlist
-            key={playlist.uri}
-            playlist={playlist}
-            chooseTrack={chooseTrack}
-            />
-          ))
-        )}
-    </div>
+            playlists.map(playlist => (
+              <Playlist
+                key={playlist.uri}
+                playlist={playlist}
+                chooseTrack={chooseTrack}
+              />
+            ))
+          )}
+        </div>
 
         {/* player */}
           {playingTrack ?
