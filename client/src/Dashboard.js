@@ -16,10 +16,12 @@ export default function Dashboard({ code }) {
   const accessToken = useAuth(code);
   const [search, setSearch] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  console.log(searchResults)
   const [backgroundImage, setBackgroundImage] = useState('');
   const [playlists, setPlaylists] = useState([]);
-  const [isPlaylist, setIsPlaylist] = useState(false);
+  const [isPlaylist, setIsPlaylist] = useState();
+  // console.log('playlist?', isPlaylist)
+  const [playlistTrack, setPlaylistTrack] = useState();
+  console.log('playlistTrack', playlistTrack);
   const [userData, setUserData] = useState({})
   const [playingTrack, setPlayingTrack] = useState();
   const [placeholderText, setPlaceholderText] = useState('');
@@ -74,36 +76,34 @@ export default function Dashboard({ code }) {
     setSearch(e.target.value);
   }
 
-  // set setPlaylistTrack
-  // useEffect(() => {
-  //   spotifyApi.getMyCurrentPlayingTrack()
-  //     .then(res => {
-  //       setPlaylistTrack({
-  //         album: res.body.item.album.name,
-  //         albumUrl: res.body.item.album.images[2],
-  //         artist: res.body.item.artists[0].name,
-  //         backgroundImage: res.body.item.album.images[2],
-  //         title: res.body.item.name,
-  //         uri: res.body.item.uri
-  //       })
-  //     })
-  //     .catch(err => {
-  //       console.log('something went wrong: ' + err);
-  //     })
-  // }, [playingTrack])
+  // get playingTrack
+  const handlePlaylistClick = () => {
+    spotifyApi.getMyCurrentPlayingTrack()
+    .then(data =>
+      setPlaylistTrack({
+        artist: data.body.item.artists[0].name,
+        title: data.body.item.name
+      })
+    )
+    .catch(err => {
+      console.log('poot', err);
+    });
+  }
 
   // get lyrics
   useEffect(() => {
-    if (isPlaylist) return;
     if (!playingTrack) return;
-    axios.get('http://localhost:3001/lyrics', {
-      params: {
-        track: playingTrack.title,
-        artist: playingTrack.artist
-      }
-    }).then(res => {
-      setLyrics(res.data.lyrics);
-    })
+    if (!isPlaylist) {
+      axios.get('http://localhost:3001/lyrics', {
+        params: {
+          track: playingTrack.title,
+          artist: playingTrack.artist
+        }
+      }).then(res => {
+        setLyrics(res.data.lyrics);
+      })
+    }
+
   })
 
   // set accessToken
@@ -226,7 +226,7 @@ export default function Dashboard({ code }) {
           ))}
 
           {/* lyrics */}
-          {!searchResults.length && !isPlaylist ?
+          {!searchResults.length && (!isPlaylist) ?
             <div style={styles.background}>
               <div
                 className="text-center lyrics"
@@ -235,19 +235,20 @@ export default function Dashboard({ code }) {
               </div>
             </div> :
             <div style={styles.background}>
-
-          </div>
+            </div>
           }
-
         </div>
+
         {/* playlists */}
-        <div className="d-flex justify-content-around">
+        <div
+          className="d-flex justify-content-around">
           {playlists.length && (
             playlists.map(playlist => (
               <Playlist
                 key={playlist.uri}
                 playlist={playlist}
                 chooseTrack={chooseTrack}
+                handlePlaylistClick={handlePlaylistClick}
               />
             ))
           )}

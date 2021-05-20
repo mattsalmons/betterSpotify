@@ -1,3 +1,11 @@
 #root {
-  background-color: #222222
+  background-color: #222222;
+}
+
+.playlist {
+  opacity: 0.3;
+}
+
+.playlist:hover {
+  opacity: 1;
 }
