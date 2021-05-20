@@ -4,6 +4,7 @@ import { Container, Form } from 'react-bootstrap'
 import SpotifyWebApi from 'spotify-web-api-node';
 import TrackSearchResult from './TrackSearchResult';
 import Player from './Player';
+import Playlist from './Playlist'
 
 import axios from 'axios';
 
@@ -17,8 +18,7 @@ export default function Dashboard({ code }) {
   const [searchResults, setSearchResults] = useState([]);
   const [backgroundImage, setBackgroundImage] = useState('');
   const [playlists, setPlaylists] = useState([]);
-  const [userData, setUserData] = useState()
-  console.log(userData);
+  const [userData, setUserData] = useState({})
   const [playingTrack, setPlayingTrack] = useState();
   const [lyrics, setLyrics] = useState(`
   music has the power to move mountains and change lives.
@@ -84,7 +84,7 @@ export default function Dashboard({ code }) {
     spotifyApi.setAccessToken(accessToken)
   }, [accessToken])
 
-  // setSearchResults
+  // set searchResults
   useEffect(() => {
     if (!search) return setSearchResults([])
     if (!accessToken) return
@@ -127,22 +127,46 @@ export default function Dashboard({ code }) {
     return () => (cancel = true)
   }, [search, accessToken])
 
-  // getUser
+  // set userData
   useEffect(() => {
     if (!accessToken) return
     spotifyApi.getMe()
       .then(res => {
         setUserData(res.body)
-      }, function(err) {
-        console.log('Something went wrong!', err);
-      });
+      })
   }, [accessToken])
+
+  // set playlists
+  useEffect(() => {
+    if (!accessToken) return;
+    spotifyApi.getUserPlaylists(userData.display_name)
+      .then(res => {
+        setPlaylists(res.body.items)
+      })
+      .catch(err => {
+        console.log('Something went wrong!', err)
+      })
+  }, [accessToken, userData.display_name])
 
 
   return (
       <Container
         className='d-flex flex-column py-2'
         style={{ height: '100vh' }}>
+
+        {/* user name */}
+        <span
+          className="d-flex flex-row-reverse"
+          style={{
+            float: 'right',
+            color: '#666666',
+            fontFamily: 'Montserrat',
+            fontSize: 'small',
+          }}>
+          {userData.display_name}
+        </span>
+
+        {/* search bar */}
         <Form.Control
           className="input"
           type="search"
@@ -161,10 +185,11 @@ export default function Dashboard({ code }) {
           }}
           onChange={onChange}
         />
+
+        {/* search results */}
         <div
           className='flex-grow-1 my-2'
           style={{ overflowY: 'auto', height: '100vh' }}>
-          >
           {searchResults.map(track => (
             <TrackSearchResult
               key={track.uri}
@@ -172,22 +197,40 @@ export default function Dashboard({ code }) {
               chooseTrack={chooseTrack}
             />
           ))}
+
+          {/* lyrics */}
           {!searchResults.length && (
             <div style={styles.background}>
-               <div className="text-center lyrics" style={styles.lyrics}>
-              {lyrics}
+              <div
+                className="text-center lyrics"
+                style={styles.lyrics}>
+                {lyrics}
               </div>
             </div>
           )}
-        </div>
-          {playingTrack ?
-          <div>
-            <Player
-            accessToken={accessToken}
-            trackUri={playingTrack?.uri}/>
-            </div> : null
-           }
 
+        </div>
+        {/* playlists */}
+        <div className="d-flex justify-content-around">
+          {playlists.length && (
+          playlists.map(playlist => (
+            <Playlist
+            key={playlist.uri}
+            playlist={playlist}
+            chooseTrack={chooseTrack}
+            />
+          ))
+        )}
+    </div>
+
+        {/* player */}
+          {playingTrack ?
+            <div>
+              <Player
+              accessToken={accessToken}
+              trackUri={playingTrack?.uri}/>
+            </div> : null
+          }
       </Container>
   )
 }
